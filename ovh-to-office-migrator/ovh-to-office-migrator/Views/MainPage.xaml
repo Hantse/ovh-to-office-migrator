@@ -1,0 +1,119 @@
+﻿<Window x:Class="OTOM.Views.MainPage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="MainPage" Height="720" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Generate Consumer Key">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Margin="5,0">
+                        <Label Content="Application Key" />
+                        <TextBox Text="{Binding Path=ApplicationKey, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="5,0">
+                        <Label Content="Application Secret" />
+                        <TextBox Text="{Binding Path=ApplicationSecret, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Margin="5,0">
+                        <Label Content="Ovh Infra Region" />
+                        <ComboBox>
+                            <ComboBoxItem IsSelected="True">
+                                Europe
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                Canada
+                            </ComboBoxItem>
+                        </ComboBox>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="140" />
+                        <ColumnDefinition Width="140" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Margin="8,5">           
+                        <Hyperlink NavigateUri="https://eu.api.ovh.com/createApp/" RequestNavigate="Hyperlink_RequestNavigate">
+                            If you doesn't have an application key and secret click here.
+                        </Hyperlink>
+                    </TextBlock>
+                    <Button Grid.Column="2" Margin="5" Content="Get Consumer Key" Command="{Binding Path=GetConsumerKeyCommand}" />
+                </Grid>
+                <TextBlock Grid.Row="2" TextAlignment="Right" Margin="8,0" Text="{Binding Path=ConsumerKeyError, Mode=TwoWay}" Grid.Column="1" Foreground="Red" />
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Valide Credentials" Grid.Row="1" IsEnabled="{Binding Path=CanDisplayValidateLink}">
+            <TextBlock Margin="8,5">           
+                <Hyperlink NavigateUri="{Binding Path=ValidationUrl, Mode=TwoWay}" RequestNavigate="Hyperlink_RequestNavigate">
+                    Click on link to validate and retrive consumer key.
+                </Hyperlink>
+            </TextBlock>
+        </GroupBox>
+
+        <GroupBox Header="Select Service" Grid.Row="2" IsEnabled="{Binding Path=CanDisplayQuery}">
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <StackPanel Margin="5">
+                    <Label Content="Select Organization Name" />
+                    <ComboBox ItemsSource="{Binding Path=Organizations, Mode=TwoWay}" SelectedItem="{Binding Path=SelectedOrg, Mode=TwoWay}" />
+                </StackPanel>
+                <StackPanel Margin="5" Grid.Column="1">
+                    <Label Content="Select Service Name" />
+                    <ComboBox ItemsSource="{Binding Path=Services, Mode=TwoWay}" SelectedItem="{Binding Path=SelectedService, Mode=TwoWay}" />
+                </StackPanel>
+            </Grid>
+        </GroupBox>
+
+        <GroupBox Header="Select account to export" Grid.Row="3" IsEnabled="{Binding Path=CanDisplayDatatable, Mode=TwoWay}">
+            <DataGrid ItemsSource="{Binding Path=Clients, Mode=TwoWay}" CanUserAddRows="False" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn Binding="{Binding Path=CanExport, Mode=TwoWay}" Header="Add to export"/>
+                    <DataGridTextColumn Binding="{Binding Path=Email, Mode=TwoWay}" Header="Email" IsReadOnly="True"/>
+                    <DataGridTextColumn Binding="{Binding Path=Status, Mode=TwoWay}" Header="Status" IsReadOnly="True" Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+
+        <Grid Grid.Row="4" IsEnabled="{Binding Path=CanDisplayDatatable, Mode=TwoWay}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="auto" />
+            </Grid.ColumnDefinitions>
+            <StackPanel Margin="5">
+                <Label Content="Enter SAS Url from office 365 export" />
+                <TextBox Text="{Binding Path=SasUrl, Mode=TwoWay,  UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+            <Button Grid.Column="1" Content="Start export" Padding="20, 0" Margin="10, 5" Command="{Binding Path=StartExportCommand}" />
+        </Grid>
+    </Grid>
+</Window>
