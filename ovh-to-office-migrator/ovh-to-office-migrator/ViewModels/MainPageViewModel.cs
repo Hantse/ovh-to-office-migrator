@@ -17,7 +17,8 @@ namespace OTOM.ViewModels
     {
         private OvhApiClient api;
         private OvhExportToAzureBl ovhExportToAzureBl = new OvhExportToAzureBl();
-        private string _applicationKey = "zKBUTxZ2o369s7GQ";
+
+        private string _applicationKey;
 
         public string ApplicationKey
         {
@@ -32,7 +33,7 @@ namespace OTOM.ViewModels
             }
         }
 
-        private string _applicationSecret = "2temEuMr0Luf8TbWMHWCEXiRgJnAI5qP";
+        private string _applicationSecret;
 
         public string ApplicationSecret
         {

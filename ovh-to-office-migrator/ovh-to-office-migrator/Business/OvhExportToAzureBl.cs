@@ -32,30 +32,18 @@ namespace OTOM.Business
             CloudBlockBlob blockBlob = blobContainer.GetBlockBlobReference(Guid.NewGuid().ToString() + ".pst");
 
             WebClient wc = new WebClient();
-            wc.DownloadProgressChanged += Wc_DownloadProgressChanged;
-            wc.DownloadFileCompleted += Wc_DownloadFileCompleted;
+            client.Status = "Upload in progress ...";
+
             try
             {
-                // Create or overwrite the "myblob" blob with contents from a local file.
-                using (MemoryStream fileStream = new MemoryStream(wc.DownloadData(client.ExportUrl)))
-                {
-                    await blockBlob.UploadFromStreamAsync(fileStream);
-                }
+                await blockBlob.UploadFromStreamAsync(wc.OpenRead(client.ExportUrl));
             }
             catch (Exception e)
             {
-
+                client.Status = "Upload error ...";
             }
-        }
 
-        private void Wc_DownloadFileCompleted(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
-        {
-            currentClient.Status = "Export completed";
-        }
-
-        private void Wc_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
-            currentClient.Status = $"Export in progress ... {e.ProgressPercentage}%";
+            client.Status = "Upload finish !";
         }
 
         private async Task GetExportUrl(ApiClientExport client, OvhApiClient api, string org, string service)
@@ -64,7 +52,7 @@ namespace OTOM.Business
             OvhApi.Models.Email.Exchange.Task taskUrl = await api.CreateEmailExchangeServiceAccountExporturl(org, service, client.Email);
             OvhApi.Models.Email.Exchange.Task task;
 
-            await Task.Delay(5000);
+            await Task.Delay(15000);
 
             do
             {
