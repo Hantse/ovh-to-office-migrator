@@ -29,7 +29,7 @@ namespace OTOM.Business
         private async Task StartExportToAzure(ApiClientExport client, string sasUrl)
         {
             CloudBlobContainer blobContainer = new CloudBlobContainer(new Uri(sasUrl));
-            CloudBlockBlob blockBlob = blobContainer.GetBlockBlobReference(Guid.NewGuid().ToString() + ".pst");
+            CloudBlockBlob blockBlob = blobContainer.GetBlockBlobReference(client.Email + ".pst");
 
             WebClient wc = new WebClient();
             client.Status = "Upload in progress ...";
